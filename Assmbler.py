@@ -1,28 +1,4 @@
-# I just like the feeling of being able to type fast
-
-# Converting hack assembly langauge to machine code
-
-# I like typing fast I don't know how fast you type but I type pretty fucking fast
-# Open and translate the .asm files
-
-# Opening a specific file
-
-# Does it need to be in the same directory?
-
-# building a tokenizer
-
-# also experience with dealing with files.
-
-
-
-# this feels like fucking spaghetti code
-
-# oh, create a symbol table first instead of doing the processing while parsing
-# doing some preprocessing first I see
-
-
-# I am making a parser.......
-
+# Converting hack assembly langauge to machine code as part of the nand2tetris course
 
 destdict = {"null": "000", "M": "001", "D": "010", "MD": "011", "A": "100", "AM": "101", "AD": "110", "AMD": "111"}
 compdict = {"0": "0101010", "1": "0111111", "-1": "0111010", "D": "0001100", "A": "0110000", "M": "1110000", "!D": "0001101", "!A": "0110001", "!M": "1110001", "-D": "0001111", "-A": "0110011", "-M": "1110011", "D+1": "0011111", "A+1": "0110111",
@@ -30,10 +6,6 @@ compdict = {"0": "0101010", "1": "0111111", "-1": "0111010", "D": "0001100", "A"
 jumpdict = {"null": "000", "JGT": "001", "JEQ": "010", "JGE": "011", "JLT": "100", "JNE": "101", "JLE": "110", "JMP": "111"}
 symboldict = {"R0": "0", "R1": "1", "R2": "2", "R3": "3", "R4": "4", "R5": "5", "R6": "6", "R7": "7", "R8": "8", "R9": "9", "R10": "10", "R11": "11", "R12": "12", "R13": "13", "R14": "14", "R15": "15", "SCREEN": "16384", "KBD": "24576", "SP": "0", "LCL": "1", "ARG": "2", "THIS": "3", "THAT": "4"}
 instructiondict = {}
-
-
-# TIME TO REFACTOR THE CODE
-
 
 
 class HackAssembler:
@@ -191,8 +163,6 @@ def numberfile():
             instruction_num += 1
 
         if addLabel == True:
-            # you forgot to add an appropriate number of zeroes
-            #print("This should work")
 
             symboldict[temp] = str(instruction_num + 1)  # address of the next instruction, do we count comments in?
                                                     # let's no store this in binary
@@ -303,49 +273,26 @@ def parse_file():    # so many things are inside on function....
 
                 #also handle variable declaration.
 
-
-            # elif c == "(":
-            #     label = True
-            #     load_label = True
-            #
-            # elif c == ")":
-            #     load_label = False
-            #
-            # elif load_label == True:
-            #
-            #     temp += c
-
             elif c == "(":
                 isComment = True
                 break
 
-            elif (c is not "@") and (instructionA == False): # doing this after the instruction
+            elif (c is not "@") and (instructionA == False):# doing this after the instruction
 
                 #oh, I already need to store it.
 
                 temp += c
-
-               # print("does this work", c)
-                #print("temp", temp)
 
                 instructionC = True
                 loadinstructionC = True
 
             elif loadinstructionA == True:
                 temp += c
-                #print("temp", "x", temp)
 
             elif loadinstructionC == True:
                 temp += c
-                #print("temp", "x", temp)
-
 
 # This is still in the current line
-
-            # #print(c)            else:
-            #     instructiondict[instruction_num] = linenum
-            #     instruction_num += 1
-            #
 
         # process the instruction
         # this will only work it I don't allow spaces within instructions
@@ -355,9 +302,6 @@ def parse_file():    # so many things are inside on function....
         #if toTranslate is not None: .....
 
         if line.strip() is not "":     # why did not None not work?
-
-           # print(print("lol", print(print("lol")))) # why does this work?
-
 
             if instructionA == True:
 
@@ -379,8 +323,6 @@ def parse_file():    # so many things are inside on function....
                 # check if its a number then
 
                 if gotmachinecode == False:
-
-                    print("checking if number")
 
                     isNumber = False
                     isDigit = False
@@ -407,13 +349,10 @@ def parse_file():    # so many things are inside on function....
 
                     if isDigit == True:
 
-                        print("I love zhannine miraballes")
                         isNumber = True
 
 
                     if isNumber == True:
-
-                        print("I am a fucking number")
 
                         machinecode = convert2binary16(temp)
                         gotmachinecode = True
@@ -430,8 +369,6 @@ def parse_file():    # so many things are inside on function....
 
 
                     variableAdress += 1
-                    print("variableAdress", variableAdress)
-
 
 
             elif instructionC == True:
@@ -468,7 +405,6 @@ def parse_file():    # so many things are inside on function....
                             comp = dest   # this is probably not how you assign a srting
                             dest = "null"
 
-                            #print(compdict[comp])
                             parsejump = True
 
 
@@ -484,9 +420,6 @@ def parse_file():    # so many things are inside on function....
                     elif parsejump == True:
                         jump += c     # make this false after?
 
-
-
-
                 ### decode dest #####
 
                 # do an op-code
@@ -498,8 +431,6 @@ def parse_file():    # so many things are inside on function....
                 machinecode += "11"    # unused bits?
 
                 ### decode comp #####
-
-                #print("comp", comp)
 
                 for id in compdict:
 
@@ -526,10 +457,8 @@ def parse_file():    # so many things are inside on function....
 
 
             #write the machine code onto the file
-
             #opening another file inside of a file, where should I put this though?
 
-            #print(isComment)   # if is instruction
             if not isComment:
 
                 # I know the problem, it still writes even though it is not an instruction
@@ -571,9 +500,6 @@ def getBinary(decimal):
         else:
             current_power += 1
 
-
-    print(current_power, decimal)
-
     # getting binary representation
     while not finished:
 
@@ -589,40 +515,15 @@ def getBinary(decimal):
 
             current_power -= 1
 
-    print(binary, type(binary))
-
-
     return binary
 
 
-# I have never managed more than one file at a time.
-
 def code_generation():
-
-
-
-
-
     pass
 
 if __name__ == "__main__":
 
     numberfile()
-    parse_file()   # should be parse file    should have followed their format though
-
-    #getBinary(10)
-
-    #holy shit, that was it?
-    print(f"{16:b}", type(f"{10:b}"))
-
-
-    # How do I create a file thoguh, now that is hard
-    # Everything is a sixteen bit instruction
-
-
-
-
-
-
+    parse_file()
 
 
