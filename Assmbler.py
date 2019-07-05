@@ -473,51 +473,6 @@ def parse_file():    # so many things are inside on function....
 
 # machine language specification:
 
-def getBinary(decimal):
-
-    # finding the highest power of two:
-
-    binary = ""
-
-    biggerthan = False
-    finished = False
-
-    current_power = 0
-
-    leftover = decimal
-
-    # searching for the largest power of two
-    # finding the range...
-
-    while not biggerthan:
-
-        if 2**current_power > decimal:
-
-            biggerthan = True
-
-            current_power -= 1
-
-        else:
-            current_power += 1
-
-    # getting binary representation
-    while not finished:
-
-        if current_power < 0:
-            finished = True
-
-        else:
-
-            current_digit = int(leftover/(2**current_power))
-            binary += str(current_digit)
-
-            leftover -= current_digit * (2 ** current_power)
-
-            current_power -= 1
-
-    return binary
-
-
 def code_generation():
     pass
 
