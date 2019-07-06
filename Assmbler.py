@@ -83,24 +83,6 @@ def convert2binary16(decimal):
 def translate():
     pass
 
-# def write2file():
-#
-#     done = False
-#
-#     g = open(r"C:\Users\JUVER\Downloads\Nand_Folder\nand2tetris\projects\06\add\Add.hack", "w")
-#
-#     while not done:
-#
-#         # get next instruction
-#         next_instruction = get_next_instruction()
-#
-#         g.write(next_instruction)
-#
-#
-#     g.close()
-#
-
-
 # should have followed the proposed API I suppose
 
 def numberfile():
@@ -154,10 +136,6 @@ def numberfile():
             else:
                 isInstruction = True
 
-            # else:
-            #     instructiondict[instruction_num] = linenum
-            #     instruction_num += 1
-
 
         if isInstruction == True:
             instruction_num += 1
@@ -165,7 +143,7 @@ def numberfile():
         if addLabel == True:
 
             symboldict[temp] = str(instruction_num + 1)  # address of the next instruction, do we count comments in?
-                                                    # let's no store this in binary
+                                                         # let's no store this in binary
 
 
         linenum += 1
@@ -174,6 +152,39 @@ def numberfile():
 
     print("symboltable", symboldict)
 
+def getTemp():
+
+    pass
+
+def checkifnumber(temp):
+
+    isNumber = False
+    isDigit = False
+
+    for c in temp:
+
+        isDigit = False
+
+        # what the hell, that took long, lol
+        for x in range(0, 10):  # so, nine was not included in the checking i see...
+            if c == str(x):
+                isDigit = True
+                break
+
+        # checking the status after we checked the digit
+        if isDigit == False:
+            isNumber = False
+            break
+
+        else:  # check the next digit
+            continue
+
+    # check if it is a number finally
+
+    if isDigit == True:
+        isNumber = True
+
+    return isNumber
 
 # no, don't open file just parse the file
 def parse_file():    # so many things are inside on function....
@@ -220,25 +231,17 @@ def parse_file():    # so many things are inside on function....
 
         # iterating through each character in the present line
 
-        for c in line.strip():   #parse_line(line.strip())
+        for c in line.strip():
 
             print(c)
 
-            # My code needs to be improved
-
-
-            # Preprocessing
-            # applying some tests on c
-
-
             ########### comments and whitespace #################
 
-            if c == " ":   #this isn't white space fucking retard
+            if c == " ":
 
                 if loadinstructionA == True:
                     loadinsructionA = False
 
-                    #let's just break out so that we don't have to deal with the comments
                     break
 
                 elif loadinstructionC == True:
@@ -292,6 +295,13 @@ def parse_file():    # so many things are inside on function....
             elif loadinstructionC == True:
                 temp += c
 
+
+        #replace temp with query
+
+       # temp = getTemp()
+
+
+
 # This is still in the current line
 
         # process the instruction
@@ -324,33 +334,7 @@ def parse_file():    # so many things are inside on function....
 
                 if gotmachinecode == False:
 
-                    isNumber = False
-                    isDigit = False
-
-                    for c in temp:
-
-                        isDigit = False
-
-                        # what the hell, that took long, lol
-                        for x in range(0, 10):   # so, nine was not included in the checking i see...
-                            if c == str(x):
-                                isDigit = True
-                                break
-
-                        # checking the status after we checked the digit
-                        if isDigit == False:
-                            isNumber = False
-                            break
-
-                        else:   # check the next digit
-                            continue
-
-                    # check if it is a numver finally
-
-                    if isDigit == True:
-
-                        isNumber = True
-
+                    isNumber = checkifnumber(temp)
 
                     if isNumber == True:
 
