@@ -10,7 +10,6 @@ instructiondict = {}
 
 class HackAssembler:
 
-
     pass
 
 class Tests:    # should we do this?
@@ -464,5 +463,3 @@ if __name__ == "__main__":
 
     numberfile()
     parse_file()
-
-
