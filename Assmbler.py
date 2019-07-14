@@ -287,13 +287,10 @@ def parse_file():    # so many things are inside on function....
 
                 instructionC = True
                 loadinstructionC = True
-
-            elif loadinstructionA == True:
+                
+            # probably can replace this with is valid instruction
+            elif (loadinstructionA == True) or (loadinstructionC == True):
                 temp += c
-
-            elif loadinstructionC == True:
-                temp += c
-
 
         #replace temp with query
 
