@@ -151,10 +151,6 @@ def numberfile():
 
     print("symboltable", symboldict)
 
-def getTemp():
-
-    pass
-
 def checkifnumber(temp):
 
     isNumber = False
@@ -184,7 +180,98 @@ def checkifnumber(temp):
         isNumber = True
 
     return isNumber
+    
+def isComment(line):
+    
+    # this assumes that the commemt is in the beginning though(stripped line)...
+    if (line[0] == "/") and (line[1] == "/"):
+        return True
+        
+    else
+        return False
+        
+def isLabel(line):
+    
+    if line[0] == "(":
+        	return True
+        	
+    else
+        return False
+        
+def checkInstructionA(line):
+    
+    if line[0] == "@":
+        return True
+        
+    else 
+        return False
+        
+def checkInstructionC(line):
+    
+    # I need to get rid of the  state/time dependency/spaghetti code
+    if (isLabel(line) == False) and (isComment(line) == False) and (checkInstructionA(line) == False) 
+    # the first instruction can't be a space(we passed in line.strip().
+    	return True
 
+def getInstructionType(line):
+    
+    if checkInstructionA(line) == True:
+        return "A"
+    
+    elif checkInstructionC(line) == True:
+        return "C"
+
+def loadInstructionA(line):
+    
+    if getInstructionType(line) == "A":
+        return True
+    else
+        return False
+        
+def loadInstructionC(line):
+    
+    if getInstructionType(line) == "C":
+        return True
+    else
+        return False
+        
+def getTemp()
+
+    temp = ""   # holds the instruction to execute
+
+    # iterating through each character in the present line    
+    
+    for c in line.strip():
+
+        print(c)
+
+        ########### comments and whitespace #################
+
+        if c == " ": # this works becaused we passed in line.strip(), so there are no whitespaces in the beginning 
+            break.   # when do we make this false though?
+
+        elif isComment(line.strip()) == True:
+            break
+
+        ############## Actual instructions ##############     
+
+        elif isLabel(line.strip()) == True:
+            break
+    
+        elif loadInstructionA(line.strip()) == True:
+                
+            if c == "@":
+                continue
+                
+            else
+                temp += c  #also handles variable declaration
+                
+        # probably can replace this with is valid instruction
+        elif loadInstructionC(line.strip()) == True:
+            temp += c      #oh, I already need to store it.        
+
+    return temp
+    
 # no, don't open file just parse the file
 def parse_file():    # so many things are inside on function....
 
@@ -199,26 +286,18 @@ def parse_file():    # so many things are inside on function....
 
         #FLAGS
 
-        # maybe I should just use a reset function for these
-        isComment = False
-        instructionA = False
-        instructionC = False
-
-        loadinstructionA = False
-        loadinstructionC = False
+        # maybe I should just use a reset function for these        
 
         parsedest = False
         parsecomp = False
         parsejump = False
 
-        slash1 = False   # I should really instead be using data structures.   Learning how to program bruh
         label = False
         load_label = False
 
 # what if there are like multiple instructions I won't be able to handle that
 # I feel like my code is so sloppy should like do this in C++ to know how bad my code is
 
-        temp = ""   # holds the instruction to execute
         dest = ""
         comp = ""
         jump = ""
@@ -226,77 +305,9 @@ def parse_file():    # so many things are inside on function....
         # how do I run each character
 
         print(line.strip())
-
-
-        # iterating through each character in the present line
-
-        for c in line.strip():
-
-            print(c)
-
-            ########### comments and whitespace #################
-
-            if c == " ":
-
-                if loadinstructionA == True:
-                    loadinsructionA = False
-
-                    break
-
-                elif loadinstructionC == True:
-                    loadinstructionC = False
-                    break
-
-                # generate no machine code
-                continue
-
-            # isComment is False by default
-            # maybe I should check temp instead?
-
-            elif c == "/":
-
-                if slash1 == True:     #They need to be consecutive though....
-                    isComment = True
-
-                slash1 = True
-
-            elif isComment == True:  #no, if something is commented, I can go to the next line right?
-                #ignore these things, but when is something a comment?
-                break
-
-            ############## Actual instructions ##############
-
-
-            # when do we make this false though?
-
-            elif c == "@":
-                instructionA = True
-                loadinstructionA = True
-
-                #also handle variable declaration.
-
-            elif c == "(":
-                isComment = True
-                break
-
-            elif (c is not "@") and (instructionA == False):# doing this after the instruction
-
-                #oh, I already need to store it.
-
-                temp += c
-
-                instructionC = True
-                loadinstructionC = True
-                
-            # probably can replace this with is valid instruction
-            elif (loadinstructionA == True) or (loadinstructionC == True):
-                temp += c
-
+      
         #replace temp with query
-
-       # temp = getTemp()
-
-
+        temp = getTemp()
 
 # This is still in the current line
 
@@ -309,7 +320,7 @@ def parse_file():    # so many things are inside on function....
 
         if line.strip() is not "":     # why did not None not work?
 
-            if instructionA == True:
+            if getInstructionType(line.strip()) == "A":
 
                 print("a instruction")
 
@@ -351,7 +362,7 @@ def parse_file():    # so many things are inside on function....
                     variableAdress += 1
 
 
-            elif instructionC == True:
+            elif getInstructionType(line.strip()) == ":
 
                 print("ey! C instruction!")
 
