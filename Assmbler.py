@@ -16,8 +16,6 @@ class Tests:    # should we do this?
 
     pass
 
-
-
 def string_test(toTest):   # do something like for test in unit test check test
 
     passtest = False
@@ -27,7 +25,6 @@ def string_test(toTest):   # do something like for test in unit test check test
         passtest = True
 
     return passtest
-
 
 # All I'm doing is just a copy paste here nothing fancy...
 
@@ -41,13 +38,9 @@ def get_instruction():      # gets the instruction
 
     instruction = ""
 
-
     return instruction
 
-
-
 # Fuck comments, the code should speak for itself!
-
 
 def convert2binary16(decimal):
 
@@ -143,8 +136,6 @@ def numberfile():
 
             symboldict[temp] = str(instruction_num + 1)  # address of the next instruction, do we count comments in?
                                                          # let's no store this in binary
-
-
         linenum += 1
 
     f.close()
@@ -341,7 +332,72 @@ def checkTempIfVariable(temp, variableAdress):
     output["variableAdress"] += 1
      
     return output.values()
+    
+def findEqualSign(temp):
+    
+    for c in temp:
+        if c == "=":
+            return True
+            
+    return False
+    
+# The previous approach was probably much faster like about ~ O(n).
+def getdest(temp):
+    
+    dest = ""
+    
+    if findEqualSign(temp) == True:
+           
+        for c in temp:
+            if c == "=":
+                break
+            else 
+                dest += c
+               
+    else
+        dest = "null"
+    
+    return dest
 
+def getcomp(temp, dest):
+    
+    comp = ""
+    
+    if dest is "null":          
+        for c in temp:
+            comp += c
+    else:
+        load = False
+        for c in temp:
+            
+            if c is == "=":
+                load = True
+            
+            elif load == True:
+                if c == ";":
+                    break
+                    
+                else
+                    comp += c
+    
+    return comp
+    
+def getjump(temp):
+    
+    jump = ""
+    parsejump = False
+    load = False
+    
+    for c in temp:
+        if c == ";":
+            load = True
+            parsejump = True
+            
+        elif load == True:
+            jump += c
+        
+    return [jump, parsejump]
+    
 # no, don't open file just parse the file
 def parse_file():    # so many things are inside on function....
 
@@ -352,30 +408,16 @@ def parse_file():    # so many things are inside on function....
 
     line = f.readline()
 
-    while line:  # if there are more lines to read?
-
-        #FLAGS
-
-        # maybe I should just use a reset function for these        
-
-        parsedest = False
-        parsecomp = False
-        parsejump = False
+    while line:  # if there are more lines to read?        
 
 # what if there are like multiple instructions I won't be able to handle that
-# I feel like my code is so sloppy should like do this in C++ to know how bad my code is
-
-        dest = ""
-        comp = ""
-        jump = ""
+# I feel like my code is so sloppy should like do this in C++ to know how bad my code is (it is efficient though...)
 
         # how do I run each character
         print(line.strip())
       
         #replace temp with query
         temp = getTemp(line)
-
-# This is still in the current line
 
         # process the instruction
         # this will only work it I don't allow spaces within instructions
@@ -407,52 +449,14 @@ def parse_file():    # so many things are inside on function....
                
             elif getInstructionType(line.strip()) == "C":
 
-                print("ey! C instruction!")
+                print("ey! C instruction!")                                                                                                                                                                                                                                                                                                        
+                        
+                dest = getdest(temp)
+                comp = getcomp(temp, dest)
+                jump, parsejump = getjump(temp) # parsejump is for addimg 000 in the machinecode if its False
 
-                parsedest = True
-
-                # check if we should jump:
-
-                for c in temp: # untangle everything, because so much is being done in this one loop
-
-                    # these need to come first
-
-                    if c == "=":
-                        parsedest = False
-                        parsecomp = True
-
-                    # what if there is no semicolon?
-
-                    elif c == ";":
-
-                        if parsecomp == True:
-                            parsecomp = False
-                            parsejump = True
-
-                        elif parsecomp == False:
-
-                            #c'mon man this is stupid
-                            parsedest = False
-
-                            comp = dest   # this is probably not how you assign a srting
-                            dest = "null"
-
-                            parsejump = True
-
-                    # then we add
-                    # why must we use elif
-
-                    elif parsedest == True:
-                        dest += c
-
-                    elif parsecomp == True:
-                        comp += c
-
-                    elif parsejump == True:
-                        jump += c     # make this false after?
-
-                machinecode = getMachineCodeC(dest, comp, jump, parsejump) 
-                
+                machinecode = getMachineCodeC(dest, Icomp, jump, parsejump) 
+                       
             #write the machine code onto the file
             #opening another file inside of a file, where should I put this though?
 
