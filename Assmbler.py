@@ -235,7 +235,7 @@ def loadInstructionC(line):
     else
         return False
         
-def getTemp()
+def getTemp(line)
 
     temp = ""   # holds the instruction to execute
 
@@ -271,7 +271,77 @@ def getTemp()
             temp += c      #oh, I already need to store it.        
 
     return temp
+
+def getMachineCodeC(dest, comp, jump, parsejump):
     
+    # do an op-code
+
+    machinecode = "111"   # unused bits?
+
+    ### decode comp #####
+
+    for id in compdict:
+
+        if id == comp:
+            machinecode += compdict[comp]
+            
+    ### decode dest #####
+
+    for id in destdict:
+
+        if id == dest:   # how to check it two strings are equal?
+
+            machinecode += destdict[dest]
+
+    ### decode jump #####
+
+    for id in jumpdict:
+
+        if id == jump:
+
+            machinecode += jumpdict[jump]
+
+    if parsejump == False:
+        machinecode += jumpdict["null"]
+    
+    return machinecode
+
+def checkTempIfSymbol(temp):
+    
+    thisDict = {"machinecode": None, "gotmachinecode": None}
+    
+    for key in symboldict:
+        if key == temp:
+
+            thisDict["machinecode"] = convert2binary16(symboldict[temp])
+            thisDict["gotmachinecode"] = True
+   
+    return thisDict.values()
+
+def checkTempIfNumber(temp):
+    
+    output = {"machinecode": None, "gotmachinecode": None}
+    
+    if checkifnumber(temp) == True:
+
+        output["machinecode"] = convert2binary16(temp)
+        output["gotmachinecode"] = True
+    
+    return output.values()
+
+def checkTempIfVariable(temp, variableAdress):
+    
+    output = {"machinecode": None, "gotmachinecode": None, "variableAdress": variableAdress}
+    
+    symboldict[temp] = str(variableAdress)
+
+    output["machinecode"] = convert2binary16(str(variableAdress)) # notice that it should be a string
+    output["gotmachinecode"] = True
+
+    output["variableAdress"] += 1
+     
+    return output.values()
+
 # no, don't open file just parse the file
 def parse_file():    # so many things are inside on function....
 
@@ -292,9 +362,6 @@ def parse_file():    # so many things are inside on function....
         parsecomp = False
         parsejump = False
 
-        label = False
-        load_label = False
-
 # what if there are like multiple instructions I won't be able to handle that
 # I feel like my code is so sloppy should like do this in C++ to know how bad my code is
 
@@ -303,11 +370,10 @@ def parse_file():    # so many things are inside on function....
         jump = ""
 
         # how do I run each character
-
         print(line.strip())
       
         #replace temp with query
-        temp = getTemp()
+        temp = getTemp(line)
 
 # This is still in the current line
 
@@ -327,42 +393,19 @@ def parse_file():    # so many things are inside on function....
                 gotmachinecode = False
 
                 #I can try looping through these functions with a list
-
                 # check if temp is in the symbol table
-                for key in symboldict:
-                    if key == temp:
-
-
-                        machinecode = convert2binary16(symboldict[temp])
-                        gotmachinecode = True
-
+                machinecode, gotmachinecode = checkTempIfSymbol(temp)                     
 
                 # check if its a number then
-
                 if gotmachinecode == False:
-
-                    isNumber = checkifnumber(temp)
-
-                    if isNumber == True:
-
-                        machinecode = convert2binary16(temp)
-                        gotmachinecode = True
-
-
+                    machinecode, gotmachinecode = checkTempIfNumber(temp)
+                   
                 # it must be a variable then
                 # How the hell do I fucking use encapsulation?
                 if gotmachinecode == False:
-
-                    symboldict[temp] = str(variableAdress)
-
-                    machinecode = convert2binary16(str(variableAdress)) # notice that it should be a string
-                    gotmachinecode = True
-
-
-                    variableAdress += 1
-
-
-            elif getInstructionType(line.strip()) == ":
+                    machinecode, gotmachinecode, variableAdress = checkTempIfVariable(temp, variableAdress) 
+               
+            elif getInstructionType(line.strip()) == "C":
 
                 print("ey! C instruction!")
 
@@ -370,7 +413,7 @@ def parse_file():    # so many things are inside on function....
 
                 # check if we should jump:
 
-                for c in temp:
+                for c in temp: # untangle everything, because so much is being done in this one loop
 
                     # these need to come first
 
@@ -391,13 +434,10 @@ def parse_file():    # so many things are inside on function....
                             #c'mon man this is stupid
                             parsedest = False
 
-
-
                             comp = dest   # this is probably not how you assign a srting
                             dest = "null"
 
                             parsejump = True
-
 
                     # then we add
                     # why must we use elif
@@ -411,46 +451,12 @@ def parse_file():    # so many things are inside on function....
                     elif parsejump == True:
                         jump += c     # make this false after?
 
-                ### decode dest #####
-
-                # do an op-code
-
-                machinecode = ""
-
-                machinecode += "1"
-
-                machinecode += "11"    # unused bits?
-
-                ### decode comp #####
-
-                for id in compdict:
-
-                    if id == comp:
-                        machinecode += compdict[comp]
-
-                for id in destdict:
-
-                    if id == dest:   # how to check it two strings are equal?
-
-                        machinecode += destdict[dest]
-
-
-                ### decode jump #####
-
-                for id in jumpdict:
-
-                    if id == jump:
-
-                        machinecode += jumpdict[jump]
-
-                if parsejump == False:
-                    machinecode += jumpdict["null"]
-
-
+            machinecode = getMachineCodeC(dest, comp, jump, parsejump) 
+                
             #write the machine code onto the file
             #opening another file inside of a file, where should I put this though?
 
-            if not isComment:
+            if (isComment(line.strip()) == False) and (isLabel(line.strip()) ==False):
 
                 # I know the problem, it still writes even though it is not an instruction
 
