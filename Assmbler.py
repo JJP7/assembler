@@ -451,7 +451,7 @@ def parse_file():    # so many things are inside on function....
                     elif parsejump == True:
                         jump += c     # make this false after?
 
-            machinecode = getMachineCodeC(dest, comp, jump, parsejump) 
+                machinecode = getMachineCodeC(dest, comp, jump, parsejump) 
                 
             #write the machine code onto the file
             #opening another file inside of a file, where should I put this though?
