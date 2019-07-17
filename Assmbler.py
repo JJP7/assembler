@@ -176,53 +176,45 @@ def getInstructionType(line):
 
 def loadInstructionA(line):
     
-    if getInstructionType(line) == "A":
-        return True
-    else
-        return False
+    temp = ""
+    
+    for c in line:
         
+        if c == " ":
+            break
+            
+        if c is not "@":
+            temp += c
+            
+    return temp
+               
 def loadInstructionC(line):
     
-    if getInstructionType(line) == "C":
-        return True
-    else
-        return False
+    temp = ""
+    
+    for c in line:
         
-def getTemp(line)
-
-    temp = ""   # holds the instruction to execute
+        if c == " ":
+            break
+            
+        else
+            temp += c
+            
+     return temp      
+        
+def getTemp(line):
 
     # iterating through each character in the present line    
     
-    for c in line.strip():
-
-        print(c)
-
-        ########### comments and whitespace #################
-
-        if c == " ": # this works becaused we passed in line.strip(), so there are no whitespaces in the beginning 
-            break.   # when do we make this false though?
-
-        elif isComment(line.strip()) == True:
-            break
-
-        ############## Actual instructions ##############     
-
-        elif isLabel(line.strip()) == True:
-            break
-    
-        elif loadInstructionA(line.strip()) == True:
-                
-            if c == "@":
-                continue
-                
-            else
-                temp += c  #also handles variable declaration
-                
-        # probably can replace this with is valid instruction
-        elif loadInstructionC(line.strip()) == True:
-            temp += c      #oh, I already need to store it.        
-
+    if (isNoise(line.strip()) == True) or (isLabel(line.strip()) == True):
+        return None    # do nothing
+        
+    elif getInstructionType(line.strip()) == "A":
+        temp = loadInstructionA(line.strip())
+        
+    elif getInstructionType(line.strip()) == "C":
+        temp = loadInstructionC(line.strip())                                                                                                              
+                   
     return temp
 
 def getMachineCodeA(temp, variableAdress):
