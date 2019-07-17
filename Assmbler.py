@@ -164,15 +164,21 @@ def checkInstructionC(line):
     # I need to get rid of the  state/time dependency/spaghetti code
     if (isLabel(line) == False) and (isNoise(line) == False) and (checkInstructionA(line) == False): 
     # the first instruction can't be a space(we passed in line.strip().
-    	return True
+    	    return True
+    	    
+    else
+        return False
 
 def getInstructionType(line):
     
     if checkInstructionA(line) == True:
         return "A"
     
-    elif checkInstructionC(line) == True:
+    elif checkInstructionC(line) == True: # to optimize performance I think C should be last and noise be the first
         return "C"
+        
+    else 
+        return "not an instruction!" # just in case it doesn't satisfy the first two and doesn't return a value
 
 def loadInstructionA(line):
     
